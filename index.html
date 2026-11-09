@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayern - Josef Michlbauer</title>
+    <style>
+        /* --- CSS Styles --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #fff;
+            color: #1a1a1a;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        
+        /* Layout */
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            background: #fff;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Typography */
+        .text-bold { font-weight: bold; }
+        .text-small { font-size: 13px; }
+        .text-medium { font-size: 15px; }
+        .text-large { font-size: 20px; }
+        .text-xl { font-size: 26px; }
+        .text-blue { color: #0018A8; }
+        .text-white { color: #fff; }
+        .text-gray { color: #555; }
+        .text-light-gray { color: #888; }
+
+        /* Icons */
+        svg { display: inline-block; vertical-align: middle; fill: currentColor; }
+
+        /* Header */
+        header {
+            background-color: #0018A8;
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        
+        /* LOGO CSS */
+        .logo-mark {
+            width: 22px; height: 22px; 
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .logo-text { font-size: 17px; font-weight: bold; color: #fff; }
+        .header-right { display: flex; gap: 32px; color: #fff; align-items: center; }
+        .header-item {
+            display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;
+        }
+        .header-item:hover { opacity: 0.9; }
+        
+        /* Language Switcher */
+        .lang-switch {
+            display: flex; gap: 5px; font-size: 13px; font-weight: bold; cursor: pointer;
+            border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px; margin-left: 10px;
+        }
+        .lang-switch span:hover { text-decoration: underline; }
+        .lang-active { color: #fff; }
+        .lang-inactive { color: #a0aabf; }
+        
+        /* Chat Icon */
+        .chat-icon {
+            width: 40px; height: 40px; position: absolute; bottom: 20px; right: 20px;
+            background: #0018A8; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; z-index: 100;
+        }
+
+        /* Secondary Nav */
+        nav.secondary {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            height: 52px;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 40px;
+            gap: 36px;
+        }
+        .nav-link {
+            font-size: 15px; color: #1a1a1a; text-decoration: none;
+            padding-bottom: 16px; cursor: pointer;
+        }
+        .nav-link.active {
+            background-color: #0018A8; color: #fff;
+            padding: 0 18px; padding-top: 16px; padding-bottom: 0;
+        }
+        .nav-link:hover:not(.active) { color: #0018A8; }
+
+        /* Main Content */
+        main { padding: 30px 40px; flex: 1; }
+        .breadcrumb { font-size: 15px; margin-bottom: 40px; display: flex; flex-direction: column; }
+        .breadcrumb-accent { width: 70px; height: 3px; background-color: #0018A8; margin-top: 4px; }
+
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px;
+        }
+        .btn-primary {
+            background-color: #0018A8; color: #fff; font-size: 14px; font-weight: bold;
+            padding: 12px 22px; border: none; border-radius: 0; cursor: pointer; display: inline-block;
+        }
+        .btn-icon-group {
+            position: relative;
+        }
+        .btn-icon {
+            width: 44px; height: 44px; background-color: #fff;
+            border: 1px solid #d0d0d0; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; margin-left: 8px;
+        }
+        .btn-group { display: flex; align-items: center; }
+
+        .balance-section { display: flex; flex-direction: column; margin-bottom: 40px; }
+        .balance-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .balance-amount { font-size: 20px; font-weight: bold; display: flex; align-items: center; }
+        .balance-asterisk { font-size: 16px; color: #888; margin-left: 4px; font-weight: normal; }
+
+        .accounts-section { margin-top: 40px; }
+        .accounts-header { display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; margin-bottom: 0; }
+        .account-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 17px 0; border-bottom: 1px solid #e8e8e8;
+        }
+        .account-left { display: flex; align-items: center; gap: 16px; cursor: pointer; }
+        .account-left:hover .account-name { text-decoration: underline; }
+        .icon-circle {
+            width: 40px; height: 40px; background-color: #f0f2f5; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; color: #888;
+        }
+        .account-info { display: flex; flex-direction: column; gap: 4px; }
+        .account-name { font-size: 14px; font-weight: bold; }
+        .account-right { display: flex; align-items: center; gap: 12px; }
+        .account-amount { font-size: 15px; font-weight: bold; }
+        .kebab-icon {
+            width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 4px; align-items: center; cursor: pointer;
+        }
+        .kebab-dot { width: 4px; height: 4px; background-color: #888; border-radius: 50%; }
+
+        /* Transactions List */
+        .transaction-list {
+            display: block; 
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            background: #fafafa;
+        }
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        .transaction-item:last-child { border-bottom: none; }
+        .transaction-info { display: flex; flex-direction: column; gap: 5px; }
+        .transaction-title { font-weight: bold; color: #1a1a1a; }
+        .transaction-date { font-size: 12px; color: #777; }
+        .transaction-amount { font-weight: bold; color: #1a1a1a; }
+        .transaction-amount.positive { color: #2e7d32; } 
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal {
+            background: #fff; padding: 30px; width: 450px; border-radius: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        .modal h2 { font-size: 18px; margin-bottom: 20px; color: #0018A8; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 5px; color: #1a1a1a; font-weight: bold; }
+        .form-group input {
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 0; font-size: 14px;
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-cancel { background: #fff; border: 1px solid #ccc; padding: 10px 20px; cursor: pointer; font-size: 13px; }
+        .btn-submit { background: #0018A8; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-size: 13px; }
+        
+        .hidden { display: none !important; }
+        .error-msg { color: #d93025; font-size: 13px; margin-top: 5px; display: none; }
+        
+        /* Login Screen specific */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 2000; display: flex; justify-content: center; align-items: center;
+        }
+        .login-box { width: 350px; background: #fff; padding: 40px; border: 1px solid #e0e0e0; position: relative; }
+        
+        /* Language Switcher for Login */
+        .login-lang-switch {
+            position: absolute; top: 15px; right: 15px;
+            display: flex; gap: 5px; font-size: 13px; font-weight: bold; cursor: pointer; color: #555;
+        }
+        .login-lang-switch span:hover { text-decoration: underline; }
+        .login-lang-active { color: #0018A8; }
+        .login-lang-inactive { color: #aaa; }
+
+        .login-header { text-align: center; margin-bottom: 30px; }
+        
+        /* LOGIN LOGO */
+        .login-logo { 
+            width: 60px; height: 60px; background: #0018A8; margin: 0 auto 15px; 
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        .login-title { font-size: 20px; font-weight: bold; color: #0018A8; margin-bottom: 10px; }
+        .login-subtitle { color: #555; font-size: 14px; }
+        
+        /* Context Menu (Dropdown for 3 dots) */
+        .context-menu {
+            position: absolute; top: 50px; right: 0; background: #fff; border: 1px solid #ccc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); width: 200px; z-index: 100;
+            display: none; flex-direction: column;
+        }
+        .context-menu-item {
+            padding: 10px 15px; font-size: 13px; color: #1a1a1a; cursor: pointer; border-bottom: 1px solid #f0f0f0;
+        }
+        .context-menu-item:last-child { border-bottom: none; }
+        .context-menu-item:hover { background-color: #f0f2f5; }
+
+    </style>
+</head>
+<body onload="setLanguage('de')">
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="login-lang-switch">
+                <span id="login-lang-de" class="login-lang-active" onclick="setLanguage('de')">DE</span>
+                <span style="color: #ccc;">|</span>
+                <span id="login-lang-en" class="login-lang-inactive" onclick="setLanguage('en')">EN</span>
+            </div>
+            <div class="login-header">
+                <!-- WHITE DIAMOND LOGO -->
+                <div class="login-logo">
+                    <svg width="30" height="30" viewBox="0 0 24 24" style="fill: #fff !important;" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 2 17 9 22 12C17 15 12 22 12 22C12 22 7 15 2 12C7 9 12 2 12 2Z"/>
+                    </svg>
+                </div>
+                <div class="login-title">Bayern</div>
+                <div class="login-subtitle" data-translate="login_subtitle">Proceed with Log In</div>
+            </div>
+            <div class="form-group">
+                <label data-translate="label_id">ID</label>
+                <input type="text" id="login-id" placeholder="Josef Michlbauer">
+            </div>
+            <div class="form-group">
+                <label data-translate="label_password">Password</label>
+                <input type="text" id="login-pin" placeholder="****" oninput="maskPassword(this)">
+            </div>
+            <div id="login-error" class="error-msg" data-translate="login_error">Ungültige ID oder PIN.</div>
+            <button class="btn-primary" style="width: 100%;" onclick="attemptLogin()" data-translate="btn_login">Anmelden</button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="app-main" style="display: none;">
+        <!-- Header -->
+        <header>
+            <div class="header-left text-white">
+                <!-- WHITE DIAMOND LOGO -->
+                <div class="logo-mark">
+                    <svg width="22" height="22" viewBox="0 0 24 24" style="fill: #fff !important;" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 2 17 9 22 12C17 15 12 22 12 22C12 22 7 15 2 12C7 9 12 2 12 2Z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">Bayern</div>
+            </div>
+            <div class="header-right">
+                <!-- Language Switcher -->
+                <div class="lang-switch">
+                    <span id="lang-de" class="lang-active" onclick="setLanguage('de')">DE</span>
+                    <span style="color: #a0aabf;">|</span>
+                    <span id="lang-en" class="lang-inactive" onclick="setLanguage('en')">EN</span>
+                </div>
+
+                <div class="header-item" onclick="showContact()">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    <span data-translate="nav_messages">Messages</span>
+                </div>
+                <div class="header-item" onclick="showContact()">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-5h2v-2h-2v2z"/></svg>
+                    <span data-translate="nav_help">Help</span>
+                </div>
+                <div class="header-item" onclick="toggleAccountMenu()">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    J.Michlbauer
+                </div>
+                <div class="header-item" onclick="showLogout()">
+                    <svg width="16" height="16" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                    <span data-translate="nav_logout">Logout</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Secondary Nav -->
+        <nav class="secondary">
+            <a href="#" class="nav-link active" data-translate="subnav_overview">Overview</a>
+            <a href="#" class="nav-link" onclick="openTransfer()" data-translate="subnav_transfer">Transfer</a>
+            <a href="#" class="nav-link" onclick="showInvest()" data-translate="subnav_invest">Invest</a>
+            <a href="#" class="nav-link" onclick="showUnavailable()" data-translate="subnav_products">Products</a>
+            <a href="#" class="nav-link" onclick="showUnavailable()" data-translate="subnav_services">Services</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <div class="breadcrumb">
+                <span data-translate="breadcrumb">Overview</span>
+                <div class="breadcrumb-accent"></div>
+            </div>
+
+            <div class="section-header">
+                <h1 class="text-xl text-bold" data-translate="main_title">Your Financial Overview</h1>
+                <div class="btn-group">
+                    <button class="btn-primary" onclick="openTransfer()" data-translate="btn_new_transfer">New Transfer</button>
+                    <div class="btn-icon-group">
+                        <div class="btn-icon text-light-gray" onclick="toggleHeaderMenu(event)">
+                            <div class="kebab-icon">
+                                <div class="kebab-dot"></div>
+                                <div class="kebab-dot"></div>
+                                <div class="kebab-dot"></div>
+                            </div>
+                        </div>
+                        <div id="header-context-menu" class="context-menu">
+                            <div class="context-menu-item" onclick="showAccountDetails()" data-translate="menu_account_data">Account Details</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Balance -->
+            <div class="balance-section">
+                <div class="balance-row">
+                    <span class="text-medium" data-translate="total_balance">Total Balance</span>
+                    <div class="balance-right">
+                        <div class="balance-amount">
+                            258.514,57 € <span class="balance-asterisk">•</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accounts & Cards -->
+            <div class="accounts-section">
+                <div class="accounts-header">
+                    <span data-translate="accounts_cards">Accounts & Cards</span>
+                    <span>258.514,57 €</span>
+                </div>
+
+                <div class="account-row">
+                    <div class="account-left" onclick="toggleTransactionHistory()">
+                        <div class="icon-circle">
+                            <svg width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.15-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 2.03 0 2.58-1.15 2.58-2.12 0-1.4-1.24-2.01-3.42-2.52-2.41-.57-3.5-1.58-3.5-3.27 0-1.7 1.4-2.98 3.13-3.32V4h2.67v1.93c1.57.36 2.82 1.34 2.98 3.04h-1.96c-.13-.9-.77-1.57-2.43-1.57-1.7 0-2.43.94-2.43 1.9 0 1.21 1.18 1.81 3.36 2.34 2.4.6 3.63 1.58 3.63 3.45 0 1.8-1.47 2.96-3.28 3.27z"/></svg>
+                        </div>
+                        <div class="account-info">
+                            <span class="account-name" data-translate="account_name">Correspondent Account</span>
+                        </div>
+                    </div>
+                    <div class="account-right">
+                        <span class="account-amount">258.514,57 €</span>
+                        <div class="kebab-icon" onclick="toggleAccountMenu(event)">
+                            <div class="kebab-dot"></div>
+                            <div class="kebab-dot"></div>
+                            <div class="kebab-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transaction History Section -->
+                <div id="transaction-history" class="transaction-list">
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <span class="transaction-title">OpenPayd</span>
+                            <span class="transaction-date">10.11.2026</span>
+                        </div>
+                        <div class="transaction-amount positive">+ 258.514,57 €</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating Chat Icon -->
+        <div class="chat-icon" onclick="showContact()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <!-- Contact Modal -->
+    <div id="modal-contact" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_contact_title">Contact</h2>
+            <p style="margin-bottom: 20px; font-size: 14px;" data-translate="modal_contact_desc">For inquiries, please write to us at:</p>
+            <p style="font-size: 16px; font-weight: bold; color: #0018A8;">contact@lb-bayern.com</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-contact')" data-translate="btn_close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div id="modal-logout" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_logout_title">Log Out</h2>
+            <p style="margin-bottom: 20px; font-size: 14px;" data-translate="modal_logout_desc">Session ended.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="location.reload()" data-translate="btn_ok">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invest Modal -->
+    <div id="modal-invest" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_invest_title">Investment Options</h2>
+            <p style="margin-bottom: 20px; font-size: 14px;" data-translate="modal_invest_desc">Unfortunately, your account does not have an investment option yet. Please contact your bank to activate this option.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-invest')" data-translate="btn_understood">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unavailable Features Modal (Products/Services) -->
+    <div id="modal-unavailable" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_unavailable_title">Unavailable</h2>
+            <p style="margin-bottom: 20px; font-size: 14px;" data-translate="modal_unavailable_desc">It is a correspondent type of the account, these features are not available for you for the moment.</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-unavailable')" data-translate="btn_understood">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Options Modal (3 dots menu) -->
+    <div id="modal-account-menu" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_options_title">Account Options</h2>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn-primary" style="text-align: left; background: #f0f2f5; color: #1a1a1a; border: 1px solid #ccc;" onclick="showAccountDetails()" data-translate="menu_account_data">Account Details</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-account-menu')" data-translate="btn_close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Details Modal -->
+    <div id="modal-details" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_details_title">Account Details</h2>
+            <p style="margin-bottom: 20px; font-size: 14px;" data-translate="modal_correspondent_desc">
+                It's a Correspondent type of the account. Request your Deposit details from your bank manager by the email:
+            </p>
+            <p style="font-size: 16px; font-weight: bold; color: #0018A8; margin-bottom: 15px;">contact@lb-bayern.com</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-details')" data-translate="btn_close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div id="modal-transfer" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_transfer_title">New Transfer</h2>
+            <div class="form-group">
+                <label data-translate="label_recipient">Recipient (Name)</label>
+                <input type="text" id="tr-recipient">
+            </div>
+            <div class="form-group">
+                <label>IBAN</label>
+                <input type="text" id="tr-iban">
+            </div>
+            <div class="form-group">
+                <label data-translate="label_amount">Amount (EUR)</label>
+                <input type="number" id="tr-amount">
+            </div>
+            <div class="form-group">
+                <label data-translate="label_purpose">Reference</label>
+                <input type="text" id="tr-purpose">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-transfer')" data-translate="btn_cancel">Cancel</button>
+                <button class="btn-submit" onclick="confirmTransfer()" data-translate="btn_confirm_transfer">Confirm Transfer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Blocked Modal -->
+    <div id="modal-funds" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_funds_title">Transfer Not Possible</h2>
+            <p style="margin-bottom: 20px; font-size: 14px;" data-translate="modal_funds_desc">
+                The funds are currently in the transit account and cannot be transferred to your target accounts for the time being until the existing suspicions are cleared. Please contact us at <strong>contact@lb-bayern.com</strong>
+            </p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-funds')" data-translate="btn_close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation/Security Code Modal -->
+    <div id="modal-confirm" class="modal-overlay">
+        <div class="modal">
+            <h2 data-translate="modal_sec_title">Security Check</h2>
+            <p style="margin-bottom: 15px; font-size: 14px;" data-translate="modal_sec_desc">Please enter the security code sent to your mobile device.</p>
+            <div class="form-group">
+                <label data-translate="label_sec_code">Security Code</label>
+                <input type="text" id="sec-code" style="letter-spacing: 5px; text-align: center; font-size: 18px;">
+            </div>
+            <div id="sec-error" class="error-msg" data-translate="modal_sec_error">Incorrect code.</div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('modal-confirm')" data-translate="btn_cancel">Cancel</button>
+                <button class="btn-submit" onclick="verifyCode()" data-translate="btn_confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="modal-success" class="modal-overlay">
+        <div class="modal" style="text-align: center;">
+            <svg width="40" height="40" viewBox="0 0 24 24" style="color: #0018A8; margin-bottom: 15px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            <h2 style="color: #0018A8;" data-translate="modal_success_title">Transfer Successful</h2>
+            <p style="margin-bottom: 20px;" data-translate="modal_success_desc">Your transfer has been processed.</p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn-primary" onclick="closeModal('modal-success')" data-translate="btn_ok">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Language Dictionary ---
+        const translations = {
+            de: {
+                login_subtitle: "Mit der Anmeldung fortfahren",
+                label_id: "ID",
+                label_password: "Passwort",
+                login_error: "Ungültige ID oder PIN.",
+                btn_login: "Anmelden",
+                nav_messages: "Nachrichten",
+                nav_help: "Hilfe",
+                nav_logout: "Logout",
+                subnav_overview: "Übersicht",
+                subnav_transfer: "Überweisen",
+                subnav_invest: "Investieren",
+                subnav_products: "Produkte",
+                subnav_services: "Services",
+                breadcrumb: "Übersicht",
+                main_title: "Ihre Finanzübersicht",
+                btn_new_transfer: "Neue Überweisung",
+                menu_account_data: "Kontodaten",
+                total_balance: "Gesamtsaldo",
+                accounts_cards: "Konten & Karten",
+                account_name: "Korrespondenzkonto",
+                modal_contact_title: "Kontakt",
+                modal_contact_desc: "Für Rückfragen schreiben Sie uns bitte unter:",
+                btn_close: "Schließen",
+                modal_logout_title: "Abmelden",
+                modal_logout_desc: "Session beendet.",
+                btn_ok: "OK",
+                modal_invest_title: "Investitionsoptionen",
+                modal_invest_desc: "Leider verfügt Ihr Konto noch nicht über eine Investitionsoption. Bitte kontaktieren Sie Ihre Bank, um diese Option zu aktivieren.",
+                btn_understood: "Verstanden",
+                modal_unavailable_title: "Nicht verfügbar",
+                modal_unavailable_desc: "Es handelt sich um ein Korrespondenzkonto. Diese Funktionen sind für Sie derzeit nicht verfügbar.",
+                modal_options_title: "Konto-Optionen",
+                modal_details_title: "Kontodaten",
+                modal_correspondent_desc: "Es handelt sich um ein Korrespondenzkonto. Bitte fordern Sie Ihre Einzahlungsdetails von Ihrem Bankberater per E-Mail an:",
+                modal_transfer_title: "Neue Überweisung",
+                label_recipient: "Empfänger (Name)",
+                label_amount: "Betrag (EUR)",
+                label_purpose: "Verwendungszweck",
+                btn_cancel: "Abbrechen",
+                btn_confirm_transfer: "Überweisung bestätigen",
+                modal_funds_title: "Überweisung nicht möglich",
+                modal_funds_desc: "Die Mittel befinden sich derzeit auf dem Transitkonto und können vorerst nicht auf Ihr Zielkonto überwiesen werden, bis die bestehenden Verdachtsmomente ausgeräumt sind. Bitte kontaktieren Sie uns <strong>contact@lb-bayern.com</strong>",
+                modal_sec_title: "Sicherheitsabfrage",
+                modal_sec_desc: "Bitte geben Sie den Sicherheitscode ein, der an Ihr mobiles Gerät gesendet wurde.",
+                label_sec_code: "Sicherheitscode",
+                modal_sec_error: "Falscher Code.",
+                btn_confirm: "Bestätigen",
+                modal_success_title: "Überweisung erfolgreich",
+                modal_success_desc: "Ihre Überweisung wurde bearbeitet."
+            },
+            en: {
+                login_subtitle: "Proceed with Log In",
+                label_id: "ID",
+                label_password: "Password",
+                login_error: "Invalid ID or PIN.",
+                btn_login: "Log In",
+                nav_messages: "Messages",
+                nav_help: "Help",
+                nav_logout: "Logout",
+                subnav_overview: "Overview",
+                subnav_transfer: "Transfer",
+                subnav_invest: "Invest",
+                subnav_products: "Products",
+                subnav_services: "Services",
+                breadcrumb: "Overview",
+                main_title: "Your Financial Overview",
+                btn_new_transfer: "New Transfer",
+                menu_account_data: "Account Details",
+                total_balance: "Total Balance",
+                accounts_cards: "Accounts & Cards",
+                account_name: "Correspondent Account",
+                modal_contact_title: "Contact",
+                modal_contact_desc: "For inquiries, please write to us at:",
+                btn_close: "Close",
+                modal_logout_title: "Log Out",
+                modal_logout_desc: "Session ended.",
+                btn_ok: "OK",
+                modal_invest_title: "Investment Options",
+                modal_invest_desc: "Unfortunately, your account does not have an investment option yet. Please contact your bank to activate this option.",
+                btn_understood: "Understood",
+                modal_unavailable_title: "Unavailable",
+                modal_unavailable_desc: "It is a correspondent type of the account, these features are not available for you for the moment.",
+                modal_options_title: "Account Options",
+                modal_details_title: "Account Details",
+                modal_correspondent_desc: "It's a Correspondent type of the account. Request your Deposit details from your bank manager by the email:",
+                modal_transfer_title: "New Transfer",
+                label_recipient: "Recipient (Name)",
+                label_amount: "Amount (EUR)",
+                label_purpose: "Reference",
+                btn_cancel: "Cancel",
+                btn_confirm_transfer: "Confirm Transfer",
+                modal_funds_title: "Transfer Not Possible",
+                modal_funds_desc: "The funds are currently in the transit account and cannot be transferred to your target account for the time being until the existing suspicions are cleared. Please contact us at <strong>contact@lb-bayern.com</strong>",
+                modal_sec_title: "Security Check",
+                modal_sec_desc: "Please enter the security code sent to your mobile device.",
+                label_sec_code: "Security Code",
+                modal_sec_error: "Incorrect code.",
+                btn_confirm: "Confirm",
+                modal_success_title: "Transfer Successful",
+                modal_success_desc: "Your transfer has been processed."
+            }
+        };
+
+        let currentLang = 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('lang-de').className = lang === 'de' ? 'lang-active' : 'lang-inactive';
+            document.getElementById('lang-en').className = lang === 'en' ? 'lang-active' : 'lang-inactive';
+            document.getElementById('login-lang-de').className = lang === 'de' ? 'login-lang-active' : 'login-lang-inactive';
+            document.getElementById('login-lang-en').className = lang === 'en' ? 'login-lang-active' : 'login-lang-inactive';
+
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        // Helper to mask input for type="text" fields
+        function maskPassword(input) {
+            if (input.value.length > input.dataset.length) {
+                input.value = input.value.slice(0, -1) + '*';
+                input.dataset.length = input.value.length;
+            } else if (input.value.length < input.dataset.length) {
+                input.dataset.length = input.value.length;
+            }
+        }
+
+        function attemptLogin() {
+            const id = document.getElementById('login-id').value.trim();
+            const pin = document.getElementById('login-pin').value.trim();
+            const errorMsg = document.getElementById('login-error');
+
+            // UPDATED NAME: Josef Michlbauer
+            if (id === "Josef Michlbauer" && pin.length === 4) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-main').style.display = 'flex';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function showContact() { openModal('modal-contact'); }
+        function showLogout() { openModal('modal-logout'); }
+        function showInvest() { openModal('modal-invest'); }
+        function showUnavailable() { openModal('modal-unavailable'); }
+
+        function showAccountDetails() {
+            closeModal('modal-account-menu');
+            closeModal('modal-transfer');
+            document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none');
+            openModal('modal-details');
+        }
+
+        function toggleTransactionHistory() {
+            const historyDiv = document.getElementById('transaction-history');
+            if (historyDiv.style.display === 'none') {
+                historyDiv.style.display = 'block';
+            } else {
+                historyDiv.style.display = 'none';
+            }
+        }
+
+        function toggleAccountMenu(e) {
+            if(e) e.stopPropagation();
+            openModal('modal-account-menu');
+        }
+
+        function toggleHeaderMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('header-context-menu');
+            if (menu.style.display === 'flex') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'flex';
+            }
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.btn-icon-group') && !event.target.closest('.context-menu')) {
+                document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function openTransfer() {
+            document.getElementById('tr-recipient').value = '';
+            document.getElementById('tr-iban').value = '';
+            document.getElementById('tr-amount').value = '';
+            document.getElementById('tr-purpose').value = '';
+            openModal('modal-transfer');
+        }
+
+        function confirmTransfer() {
+            const recipient = document.getElementById('tr-recipient').value;
+            if (!recipient) {
+                alert(currentLang === 'de' ? "Bitte geben Sie einen Empfänger an." : "Please enter a recipient.");
+                return;
+            }
+            closeModal('modal-transfer');
+            openModal('modal-funds'); 
+        }
+
+        function verifyCode() {
+            const code = document.getElementById('sec-code').value.trim();
+            const errorMsg = document.getElementById('sec-error');
+
+            if (code === "7880") {
+                closeModal('modal-confirm');
+                document.getElementById('sec-code').value = '';
+                openModal('modal-success');
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
